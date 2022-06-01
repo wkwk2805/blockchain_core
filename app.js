@@ -6,6 +6,7 @@ const WebSocket = require("ws");
 const ip = require("ip");
 const Transaction = require("./transaction");
 const Block = require("./block");
+const { networkInterfaces } = require("os");
 
 const blockchain = new Blockchain();
 
@@ -64,14 +65,11 @@ app.post("/network", (req, res) => {
   ws.on("open", () => {
     console.log("Open");
     // 노드끼리 서로 소켓연결 진행 (새로들어온 노드와 기존노드간의 연결)
-    ws.send(
-      JSON.stringify({ type: "WSS", url: `ws://${ip.address()}:${wsPort}` })
-    );
+    ws.send(JSON.stringify({ type: "WSS" }));
   });
 
   ws.on("message", (message) => {
     const msg = JSON.parse(message.toString());
-    console.log("msg", msg);
     switch (msg.type) {
       // 노드가 처음으로 네트워크 연결 시 블록체인 다운로드
       case "BLOCKCHAIN":
@@ -105,17 +103,17 @@ let wsClient;
 
 wss.on("connection", (ws, req) => {
   console.log(`${req.socket.remoteAddress}가 연결되었습니다!`);
-  ws.on("message", onMessage);
+  ws.on("message", (message) => onMessage(message, req));
   ws.send(
     JSON.stringify({ type: "BLOCKCHAIN", blockchain: blockchain.blockchain })
   );
 });
 
-function onMessage(message) {
+function onMessage(message, req) {
   const msg = JSON.parse(message.toString());
   switch (msg.type) {
     case "WSS": // 새로 온 노드와 연결하는 부분 -> 같은 websocket server를 보고 있으므로 주석처리
-      wsClient = new WebSocket(msg.url);
+      wsClient = new WebSocket(`ws://${req.socket.remoteAddress}:8080`);
       wsClient.on("open", () => {
         console.log("wsclient open:", msg.url);
       });

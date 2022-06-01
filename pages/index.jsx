@@ -16,8 +16,9 @@ const index = () => {
   };
 
   const sendTx = () => {
-    const tx = new Transaction({ from: "A", to: "B", amount: 100 });
-    axios.post("/tx");
+    axios.post("/tx").then((res) => {
+      console.log(res.data);
+    });
   };
 
   const getTx = () => {
