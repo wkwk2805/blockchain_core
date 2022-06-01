@@ -113,7 +113,9 @@ function onMessage(message, req) {
   const msg = JSON.parse(message.toString());
   switch (msg.type) {
     case "WSS": // 새로 온 노드와 연결하는 부분 -> 같은 websocket server를 보고 있으므로 주석처리
-      wsClient = new WebSocket(`ws://${req.socket.remoteAddress}:8080`);
+      wsClient = new WebSocket(
+        `ws://${req.socket.remoteAddress.replace("::ffff:", "")}:8080`
+      );
       wsClient.on("open", () => {
         console.log("wsclient open:", msg.url);
       });
