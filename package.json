@@ -1,0 +1,27 @@
+{
+  "name": "blockchain_tutorial2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "next",
+    "build": "next build",
+    "start": "next start"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "bn.js": "^5.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "hash.js": "^1.1.7",
+    "ip": "^1.1.8",
+    "next": "^12.1.6",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "ws": "^8.7.0"
+  }
+}
