@@ -1,13 +1,16 @@
-import React from "react";
+import React, { useRef } from "react";
 import Axios from "axios";
 import Message from "../message";
 import Transaction from "../transaction";
+import ip from "ip";
 
 const axios = Axios.create({ baseURL: "http://localhost:3001" });
 
 const index = () => {
+  const ref = useRef();
   const connectWs = () => {
-    axios.get("/network").then((res) => {
+    const peer = ref.current.value;
+    axios.post("/network", { peer }).then((res) => {
       console.log(res.data);
     });
   };
@@ -41,9 +44,14 @@ const index = () => {
     });
   };
 
+  const onChange = () => {};
+
   return (
     <div>
-      <button onClick={connectWs}>웹소켓연결</button>
+      <div>
+        <input type="text" ref={ref} />
+        <button onClick={connectWs}>웹소켓연결</button>
+      </div>
       <button onClick={start}>start</button>
       <button onClick={stop}>stop</button>
       <button onClick={sendTx}>sendTx</button>

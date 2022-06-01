@@ -56,10 +56,9 @@ app.get("/mining", async (req, res) => {
   }
 });
 
-app.get("/network", (req, res) => {
+app.post("/network", (req, res) => {
   let { peer } = req.body;
-  /* //TODO 나중에 삭제
-  peer = "ws://localhost:8080"; */
+
   const ws = new WebSocket(peer);
 
   ws.on("open", () => {
