@@ -90,9 +90,7 @@ class Blockchain {
 
   // 타겟 구하기
   getTarget(difficulty) {
-    const HADICAP = 0x4000000;
     let bits = this.difficultyToBits(difficulty);
-    bits = bits + HADICAP;
     let bits16 = parseInt("0x" + bits.toString(16), 16);
     let exponent = bits16 >> 24;
     let mantissa = bits16 & 0xffffff;
@@ -104,7 +102,7 @@ class Blockchain {
 
   // 난이도를 통해서 비트구하기
   difficultyToBits(difficulty) {
-    const maximumTarget = "0x00000000ffff" + "0".repeat(64 - 12);
+    const maximumTarget = "0x000ffff00000" + "0".repeat(64 - 12);
     const difficulty16 = difficulty.toString(16);
     let target = parseInt(maximumTarget, 16) / parseInt(difficulty16, 16);
     let num = new BN(target.toString(16), "hex");
