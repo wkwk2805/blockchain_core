@@ -21,7 +21,7 @@ class Blockchain {
     const oldBlock = this.blockchain[this.blockchain.length - 1];
     if (this.isValidBlock(oldBlock, block)) {
       this.blockchain.push(block);
-      // updateMempool(block);
+      this.updateMempool(block);
       console.log("추가된 블록", block);
       return true;
     } else {
@@ -203,6 +203,11 @@ class Blockchain {
 
     // 체인 바꿔주는 코드 (내 체인이 더 짧다면)
     this.blockchain = receivedChain;
+
+    // 트랜잭션 풀 업데이트
+    this.blockchain.forEach((block) => {
+      this.updateMempool(block);
+    });
     return true;
   }
 }
