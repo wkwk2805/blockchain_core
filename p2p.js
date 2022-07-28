@@ -60,7 +60,7 @@ class P2PServer {
           };
           const receivedBlock = result.payload;
           const isSuccess = this.blockchain.addBlock(receivedBlock);
-          if (!isSuccess) break;
+          if (isSuccess) break;
 
           this.send(socket, message);
           break;
