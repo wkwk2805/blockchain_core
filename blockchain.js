@@ -156,7 +156,7 @@ class Blockchain {
     return result;
   }
 
-  handleChainResponse(receivedChain, broadcast) {
+  handleChainResponse(receivedChain, ws) {
     // 전달 받은 체인이 올바른가?
     const isValidChain = this.isValidBlockchain(receivedChain);
 
@@ -171,7 +171,7 @@ class Blockchain {
       payload: receivedChain,
     };
 
-    broadcast(message);
+    ws.broadcast(message);
 
     return true;
   }
