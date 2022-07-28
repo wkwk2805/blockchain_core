@@ -18,7 +18,7 @@ class Blockchain {
 
   // 블록을 블록체인에 추가
   addBlock(block) {
-    const oldBlock = this.blockchain[this.blockchain - 1];
+    const oldBlock = this.blockchain[this.blockchain.length - 1];
     if (this.isValidBlock(oldBlock, block)) {
       this.blockchain.push(block);
       console.log("추가된 블록", block);
@@ -134,7 +134,6 @@ class Blockchain {
   }
 
   isValidBlock(oldBlock, newBlock) {
-    if (!oldBlock) return true;
     return (
       newBlock.index > 0 &&
       oldBlock.hash === newBlock.preHash &&

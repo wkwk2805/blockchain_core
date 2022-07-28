@@ -16,11 +16,7 @@ class Block {
     const resultHash = hash
       .sha256()
       .update(
-        this.index +
-          this.preHash +
-          this.timestamp +
-          this.transactions +
-          this.nonce
+        `${this.index}${this.preHash}${this.timestamp}${this.transactions}${this.nonce}`
       )
       .digest("hex");
     return resultHash;
