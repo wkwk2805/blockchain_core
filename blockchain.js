@@ -19,9 +19,9 @@ class Blockchain {
   // 블록을 블록체인에 추가
   addBlock(block) {
     const oldBlock = this.blockchain[this.blockchain.length - 1];
+    this.updateMempool(block);
     if (this.isValidBlock(oldBlock, block)) {
       this.blockchain.push(block);
-      this.updateMempool(block);
       console.log("추가된 블록", block);
       return true;
     } else {
