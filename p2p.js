@@ -27,6 +27,11 @@ class P2PServer {
   connectSocket(socket) {
     this.sockets.push(socket);
     this.messageHandler(socket);
+    const data = {
+      type: MessageType.latest_block,
+      payload: {},
+    };
+    this.send(socket, data);
   }
 
   getSockets() {

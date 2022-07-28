@@ -47,26 +47,35 @@ app.get("/getSockets", (req, res) => {
 
 app.get("/mining", async (req, res) => {
   const miner = req.query.miner;
-  if (!mining) {
+  const newBlock = await blockchain.mining(miner);
+  blockchain.addBlock(newBlock);
+  const msg = {
+    type: MessageType.latest_block,
+    payload: {},
+  };
+  ws.broadcast(msg);
+  res.json(newBlock);
+  /* if (!mining) {
     res.json("채굴시작");
     mining = true;
     while (mining) {
       const newBlock = await blockchain.mining(miner);
       blockchain.addBlock(newBlock);
       const msg = {
-        type: "BROADCAST_BLOCK",
-        payload: newBlock,
+        type: MessageType.latest_block,
+        payload: {},
       };
       ws.broadcast(msg);
     }
   } else {
     res.json("채굴중...");
-  }
+  } */
 });
 
 app.post("/addToPeer", (req, res) => {
   const { peer } = req.body;
   ws.connectToPeer(peer);
+  res.json(`${peer} 연결 성공`);
 });
 /* 
 app.post("/network", (req, res) => {
@@ -104,7 +113,7 @@ app.post("/network", (req, res) => {
   res.json("블록체인 네트워크에 연결 성공");
 }); */
 
-app.listen(3001, () => {
+app.listen(3000, () => {
   console.log("Connected 3001port!");
   ws.listen();
 });
