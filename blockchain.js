@@ -19,7 +19,6 @@ class Blockchain {
   // 블록을 블록체인에 추가
   addBlock(block) {
     const oldBlock = this.blockchain[this.blockchain.length - 1];
-    this.updateMempool(block);
     if (this.isValidBlock(oldBlock, block)) {
       this.blockchain.push(block);
       console.log("추가된 블록", block);
@@ -28,18 +27,6 @@ class Blockchain {
       console.log("유효하지 않은 블록입니다.");
       return false;
     }
-  }
-
-  updateMempool(newBlock) {
-    let txPool = this.mempool;
-
-    newBlock.transactions.forEach((tx) => {
-      txPool = txPool.filter((txp) => {
-        txp.txid !== tx.txid;
-      });
-    });
-
-    this.mempool = txPool;
   }
 
   slowResolve() {
@@ -205,10 +192,23 @@ class Blockchain {
     this.blockchain = receivedChain;
 
     // 트랜잭션 풀 업데이트
+    // 노드와 연결되기 전까지 받은 트랜잭션들은 무효화
     this.blockchain.forEach((block) => {
       this.updateMempool(block);
     });
     return true;
+  }
+
+  updateMempool(newBlock) {
+    let txPool = this.mempool;
+
+    newBlock.transactions.forEach((tx) => {
+      txPool = txPool.filter((txp) => {
+        txp.txid !== tx.txid;
+      });
+    });
+
+    this.mempool = txPool;
   }
 }
 
