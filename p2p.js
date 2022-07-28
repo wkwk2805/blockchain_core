@@ -8,7 +8,7 @@ class P2PServer {
   }
 
   listen() {
-    const server = new WebSocket.Server({ port: 7546 });
+    const server = new WebSocket.Server({ port: 7545 });
     server.on("connection", (socket, req) => {
       console.log(
         `webSocket connection ${req.socket.remoteAddress}:${req.socket.remotePort}`
