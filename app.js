@@ -2,16 +2,15 @@ const express = require("express");
 const Blockchain = require("./blockchain");
 const app = express();
 const cors = require("cors");
-const WebSocket = require("ws");
 const ip = require("ip");
 const Transaction = require("./transaction");
-const Block = require("./block");
-const { networkInterfaces } = require("os");
+const P2PServer = require("./p2p");
+const MessageType = require("./msg");
 
 const blockchain = new Blockchain();
+const ws = new P2PServer(blockchain);
 
 let mining;
-let wsPort = 8080;
 
 app.use(cors());
 
@@ -42,6 +41,10 @@ app.get("/blocks", (req, res) => {
   res.json(blockchain.blockchain);
 });
 
+app.get("/getSockets", (req, res) => {
+  res.json(ws.getSockets());
+});
+
 app.get("/mining", async (req, res) => {
   const miner = req.query.miner;
   if (!mining) {
@@ -50,13 +53,22 @@ app.get("/mining", async (req, res) => {
     while (mining) {
       const newBlock = await blockchain.mining(miner);
       blockchain.addBlock(newBlock);
-      broadcast(JSON.stringify({ type: "BLOCK", block: newBlock }));
+      const msg = {
+        type: "BROADCAST_BLOCK",
+        payload: newBlock,
+      };
+      ws.broadcast(msg);
     }
   } else {
     res.json("채굴중...");
   }
 });
 
+app.post("/addToPeer", (req, res) => {
+  const { peer } = req.body;
+  ws.connectToPeer(peer);
+});
+/* 
 app.post("/network", (req, res) => {
   let { peer } = req.body;
 
@@ -90,14 +102,15 @@ app.post("/network", (req, res) => {
   });
 
   res.json("블록체인 네트워크에 연결 성공");
-});
+}); */
 
 app.listen(3001, () => {
   console.log("Connected 3001port!");
+  ws.listen();
 });
 
 /* --------------------  network ----------------------------- */
-
+/* 
 const wss = new WebSocket.Server({ port: wsPort });
 let wsClient;
 
@@ -138,3 +151,4 @@ function broadcastWithoutMe(ws, message) {
     }
   });
 }
+ */

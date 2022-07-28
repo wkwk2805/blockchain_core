@@ -1,6 +1,7 @@
 const Block = require("./block");
 const { BN } = require("bn.js");
 const Transaction = require("./transaction");
+const MessageType = require("./msg");
 
 // 블록체인 설계도
 class Blockchain {
@@ -21,8 +22,10 @@ class Blockchain {
     if (this.isValidBlock(oldBlock, block)) {
       this.blockchain.push(block);
       console.log("추가된 블록", block);
+      return true;
     } else {
       console.log("유효하지 않은 블록입니다.");
+      return false;
     }
   }
 
@@ -126,6 +129,10 @@ class Blockchain {
     return parseInt(bits.toString(10));
   }
 
+  getLastBlock() {
+    return this.blockchain[this.blockchain.length - 1];
+  }
+
   isValidBlock(oldBlock, newBlock) {
     if (!oldBlock) return true;
     return (
@@ -147,6 +154,44 @@ class Blockchain {
       if (!result) return false;
     }
     return result;
+  }
+
+  handleChainResponse(receivedChain, broadcast) {
+    // 전달 받은 체인이 올바른가?
+    const isValidChain = this.isValidBlockchain(receivedChain);
+
+    if (!isValidChain) return;
+
+    const isValid = this.replaceChain(receivedChain);
+    if (!isValid) return;
+
+    // broadcast
+    const message = {
+      type: MessageType.receivedChain,
+      payload: receivedChain,
+    };
+
+    broadcast(message);
+
+    return true;
+  }
+
+  replaceChain(receivedChain) {
+    const latestReceivedBlock = receivedChain[receivedChain.length - 1];
+    const latestBlock = this.getLastBlock();
+    if (latestReceivedBlock.index === 0) {
+      console.log("받은 최신 블록이 제네시스 블록");
+      return false;
+    }
+
+    if (latestReceivedBlock.index <= latestBlock.index) {
+      console.log("자신의 블록이 더 길거나 같습니다.");
+      return false;
+    }
+
+    // 체인 바꿔주는 코드 (내 체인이 더 짧다면)
+    this.blockchain = receivedChain;
+    return true;
   }
 }
 

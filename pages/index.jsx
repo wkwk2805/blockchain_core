@@ -10,7 +10,8 @@ const index = () => {
   const ref = useRef();
   const connectWs = () => {
     const peer = ref.current.value;
-    axios.post("/network", { peer }).then((res) => {
+    console.log(peer);
+    axios.post("/addToPeer", { peer }).then((res) => {
       console.log(res.data);
     });
   };
@@ -45,7 +46,23 @@ const index = () => {
     });
   };
 
-  const onChange = () => {};
+  const getSockets = () => {
+    axios.get("/getSockets").then((res) => {
+      console.log(res.data);
+    });
+  };
+
+  const broadcastToClient = () => {
+    axios.get("/broadcastToClients").then((res) => {
+      console.log(res.data);
+    });
+  };
+
+  const broadcastToServer = () => {
+    axios.get("/broadcastToServers").then((res) => {
+      console.log(res.data);
+    });
+  };
 
   return (
     <div>
@@ -58,6 +75,9 @@ const index = () => {
       <button onClick={sendTx}>sendTx</button>
       <button onClick={getTx}>getTx</button>
       <button onClick={getBlocks}>getBlocks</button>
+      <button onClick={getSockets}>getSockets</button>
+      <button onClick={broadcastToClient}>broadcastToClient</button>
+      <button onClick={broadcastToServer}>broadcastToServer</button>
     </div>
   );
 };
