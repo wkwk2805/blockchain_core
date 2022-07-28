@@ -53,7 +53,7 @@ class P2PServer {
           break;
         }
         case MessageType.all_block: {
-          console.log(1, message);
+          console.log(1);
           const message = {
             type: MessageType.receivedChain,
             payload: this.blockchain.blockchain,
