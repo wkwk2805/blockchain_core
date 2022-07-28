@@ -53,14 +53,14 @@ class P2PServer {
           break;
         }
         case MessageType.all_block: {
-          console.log(1);
+          console.log(1, message);
           const message = {
             type: MessageType.receivedChain,
             payload: this.blockchain.blockchain,
           };
           const receivedBlock = result.payload;
-          const result = this.blockchain.addBlock(receivedBlock);
-          if (!result) break;
+          const isSuccess = this.blockchain.addBlock(receivedBlock);
+          if (!isSuccess) break;
 
           this.send(socket, message);
           break;
