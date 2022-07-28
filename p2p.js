@@ -8,7 +8,7 @@ class P2PServer {
   }
 
   listen() {
-    const server = new WebSocket.Server({ port: 7545 });
+    const server = new WebSocket.Server({ port: 7546 });
     server.on("connection", (socket, req) => {
       console.log(
         `webSocket connection ${req.socket.remoteAddress}:${req.socket.remotePort}`
@@ -43,7 +43,6 @@ class P2PServer {
       const result = JSON.parse(message.toString());
       switch (result.type) {
         case MessageType.latest_block: {
-          console.log(0);
           // 내용
           const message = {
             type: MessageType.all_block,
@@ -53,7 +52,6 @@ class P2PServer {
           break;
         }
         case MessageType.all_block: {
-          console.log(1);
           const message = {
             type: MessageType.receivedChain,
             payload: this.blockchain.blockchain,
@@ -66,13 +64,11 @@ class P2PServer {
           break;
         }
         case MessageType.receivedChain: {
-          console.log(2);
           const receivedChain = result.payload;
           this.blockchain.handleChainResponse(receivedChain, this);
           break;
         }
         case MessageType.receivedTx: {
-          console.log(3);
           const receivedTransaction = result.payload;
           if (receivedTransaction === null) break;
 

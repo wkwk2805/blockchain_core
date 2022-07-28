@@ -75,7 +75,7 @@ app.post("/addToPeer", (req, res) => {
   res.json(`${peer} 연결 성공`);
 });
 
-app.listen(3000, () => {
-  console.log("Connected 3000port!");
+app.listen(3001, () => {
+  console.log("Connected 3001port!");
   ws.listen();
 });
