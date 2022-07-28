@@ -47,15 +47,7 @@ app.get("/getSockets", (req, res) => {
 
 app.get("/mining", async (req, res) => {
   const miner = req.query.miner;
-  const newBlock = await blockchain.mining(miner);
-  blockchain.addBlock(newBlock);
-  const msg = {
-    type: MessageType.latest_block,
-    payload: {},
-  };
-  ws.broadcast(msg);
-  res.json(newBlock);
-  /* if (!mining) {
+  if (!mining) {
     res.json("채굴시작");
     mining = true;
     while (mining) {
@@ -69,7 +61,7 @@ app.get("/mining", async (req, res) => {
     }
   } else {
     res.json("채굴중...");
-  } */
+  }
 });
 
 app.post("/addToPeer", (req, res) => {
