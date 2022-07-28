@@ -72,6 +72,23 @@ class P2PServer {
           break;
         }
         case MessageType.receivedTx: {
+          console.log(3);
+          const receivedTransaction = result.payload;
+          if (receivedTransaction === null) break;
+
+          const withTransaction = this.blockchain.mempool.find((tx) => {
+            return tx.txid === receivedTransaction.txid;
+          });
+
+          // 내 풀에 받은 트랜잭션 내용이 없다면 추가.
+          if (!withTransaction) {
+            this.blockchain.addTransaction(receivedTransaction);
+            const message = {
+              type: MessageType.receivedTx,
+              payload: receivedTransaction,
+            };
+            this.broadcast(message);
+          }
           break;
         }
       }

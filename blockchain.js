@@ -21,12 +21,25 @@ class Blockchain {
     const oldBlock = this.blockchain[this.blockchain.length - 1];
     if (this.isValidBlock(oldBlock, block)) {
       this.blockchain.push(block);
+      // updateMempool(block);
       console.log("추가된 블록", block);
       return true;
     } else {
       console.log("유효하지 않은 블록입니다.");
       return false;
     }
+  }
+
+  updateMempool(newBlock) {
+    let txPool = this.mempool;
+
+    newBlock.transactions.forEach((tx) => {
+      txPool = txPool.filter((txp) => {
+        txp.txid !== tx.txid;
+      });
+    });
+
+    this.mempool = txPool;
   }
 
   slowResolve() {

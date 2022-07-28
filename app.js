@@ -28,7 +28,12 @@ app.post("/tx", (req, res) => {
   let { tx } = req.body;
   tx = { from: ip.address(), to: "B", amount: 10 };
   blockchain.addTx(new Transaction(tx));
-  broadcast(JSON.stringify({ type: "TX", tx: tx }));
+  // 트랜잭션 broadcast
+  const message = {
+    type: MessageType.receivedTx,
+    payload: tx,
+  };
+  ws.broadcast(message);
   res.json("트랜잭션 전송");
 });
 
