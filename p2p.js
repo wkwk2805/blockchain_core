@@ -82,7 +82,7 @@ class P2PServer {
 
           // 내 풀에 받은 트랜잭션 내용이 없다면 추가.
           if (!withTransaction) {
-            this.blockchain.addTransaction(receivedTransaction);
+            this.blockchain.addTx(receivedTransaction);
             const message = {
               type: MessageType.receivedTx,
               payload: receivedTransaction,

@@ -26,8 +26,8 @@ app.get("/stop", (req, res) => {
 app.post("/tx", (req, res) => {
   console.log("트랜잭션 전송");
   let { tx } = req.body;
-  tx = { from: ip.address(), to: "B", amount: 10 };
-  blockchain.addTx(new Transaction(tx));
+  tx = new Transaction({ from: ip.address(), to: "B", amount: 10 });
+  blockchain.addTx(tx);
   // 트랜잭션 broadcast
   const message = {
     type: MessageType.receivedTx,
