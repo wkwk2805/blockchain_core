@@ -34,7 +34,7 @@ app.post("/tx", (req, res) => {
     payload: tx,
   };
   ws.broadcast(message);
-  res.json("트랜잭션 전송");
+  res.json(tx);
 });
 
 app.get("/txList", (req, res) => {
